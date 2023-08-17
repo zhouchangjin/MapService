@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/x-icon" href="https://openlayers.org/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title> 寻路</title>
+  </head>
+  <body>
+    <div id="ctrl">
+	  <span><label>起点</label><input id="start_coor_lo"></input><input id="start_coor_la"></input></span>
+	  <span><label>终点</label><input id="end_coor_lo"></input><input id="end_coor_la"></input></span>
+	  <span id="mouse-position"></span>
+	  <span> <button id="btnroute">查询</button></span>
+	</div>
+    <div id="map"></div>
+    <script type="module" src="./main.js"></script>
+  </body>
+</html>
