@@ -19,6 +19,7 @@ public class GraphHopperInitUtil {
     }
 
     public static void main(String[] args) {
-        InitGraphHopper("d:/Fujian_Road_Network.osm","d:/cache","car","bike","foot");
+        InitGraphHopper("d:/地图数据/osm/福建路网v1.5.osm","d:/cache","car","bike","foot");
+        //System.out.println("=="+(1<<20));
     }
 }
