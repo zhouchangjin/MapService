@@ -2,3 +2,8 @@ server:
     port: 9090
 graphhopper:
     cacheFolder: D:/cache
+spring:
+    servlet:
+      multipart:
+        maxFileSize: 100MB
+        maxRequestSize: 1000MB

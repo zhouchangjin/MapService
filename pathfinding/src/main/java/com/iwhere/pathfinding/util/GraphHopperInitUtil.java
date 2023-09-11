@@ -18,6 +18,18 @@ public class GraphHopperInitUtil {
         hopper.importAndClose();
     }
 
+    public static GraphHopper GetInstance(String cacheFolder,String ...profileNames){
+        GraphHopper hopper=new GraphHopper();
+        hopper.setGraphHopperLocation(cacheFolder);
+        ProfileFactory fac=new ProfileFactory();
+        Profile[] profiles=fac.createProfilesWithName(profileNames);
+        CHProfile[] chProfiles=fac.createCHProfilesWithName(profileNames);
+        hopper.setProfiles(profiles);
+        hopper.getCHPreparationHandler().setCHProfiles(chProfiles);
+        hopper.importOrLoad();
+        return hopper;
+    }
+
     public static void main(String[] args) {
         InitGraphHopper("d:/地图数据/osm/福建路网v1.5.osm","d:/cache","car","bike","foot");
         //System.out.println("=="+(1<<20));
