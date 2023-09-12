@@ -1,5 +1,7 @@
 package com.iwhere.pathfinding.config;
 
+import com.graphhopper.reader.dem.ElevationProvider;
+import com.iwhere.pathfinding.elevation.MyElevationProvider;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,6 +16,26 @@ public class GraphhopperConfig {
 	
 	String cacheFolder;
 
+	boolean enableElevator;
+
+	String demFile;
+
+	public boolean isEnableElevator() {
+		return enableElevator;
+	}
+
+	public void setEnableElevator(boolean enableElevator) {
+		this.enableElevator = enableElevator;
+	}
+
+	public String getDemFile() {
+		return demFile;
+	}
+
+	public void setDemFile(String demFile) {
+		this.demFile = demFile;
+	}
+
 	public String getCacheFolder() {
 		return cacheFolder;
 	}
@@ -25,7 +47,13 @@ public class GraphhopperConfig {
 	@Bean
 	public GraphHopper getGraphHopperBean() {
 		GraphHopper hopper=new GraphHopper();
-		System.out.println(getCacheFolder());
+		//System.out.println(getCacheFolder());
+		if(isEnableElevator()){
+			MyElevationProvider provider=new MyElevationProvider(getDemFile());
+			provider.initialize();
+			hopper.setElevationProvider(provider);
+		}
+
 		hopper.setGraphHopperLocation(getCacheFolder());
 		hopper.setProfiles(new Profile("car").setVehicle("car").setWeighting("fastest").setTurnCosts(false));
 		hopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car"));
