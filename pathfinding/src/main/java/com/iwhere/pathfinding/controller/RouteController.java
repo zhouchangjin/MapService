@@ -2,6 +2,7 @@ package com.iwhere.pathfinding.controller;
 
 import java.util.List;
 
+import com.iwhere.pathfinding.dto.GPSPointWithElevation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,7 +29,7 @@ public class RouteController {
 	public Message getRoute(@RequestBody GPSPair points) {
 		Message message = new Message();
 		message.setMessage("获取成功");
-		List<GPSPoint> plist=pathService.searchRoute(points.getStart(), points.getEnd());
+		List<GPSPointWithElevation> plist=pathService.searchRoute(points.getStart(), points.getEnd());
 		message.setData(plist);
 		return message;
 	}

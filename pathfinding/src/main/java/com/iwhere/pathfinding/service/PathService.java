@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import com.iwhere.pathfinding.dto.GPSPointWithElevation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,8 @@ public class PathService {
 	@Autowired
 	GraphHopper graphhopper;
 	
-	public List<GPSPoint> searchRoute(GPSPoint start, GPSPoint end) {
-		ArrayList<GPSPoint> plist = new ArrayList<GPSPoint>();
+	public List<GPSPointWithElevation> searchRoute(GPSPoint start, GPSPoint end) {
+		ArrayList<GPSPointWithElevation> plist = new ArrayList<GPSPointWithElevation>();
         //System.out.println(start.getLatitude()+"_"+start.getLongitude());
 		GHRequest req = new GHRequest(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude()).setProfile("car")
 				.setLocale(Locale.CHINA);
@@ -33,11 +34,13 @@ public class PathService {
 	         // 导航结果点位集合
 	         PointList pointList = path.getPoints();
 	         for (int i = 0; i < pointList.size(); ++i) {
-	        	 GPSPoint p=new GPSPoint();
+	        	 GPSPointWithElevation p=new GPSPointWithElevation();
 	        	 double longi=pointList.getLon(i);
 	        	 double lati=pointList.getLat(i);
+				 double elevation=pointList.getEle(i);
 	        	 p.setLatitude(lati);
 	        	 p.setLongitude(longi);
+				 p.setElevation(elevation);
 	        	 plist.add(p);
 	         }
 		}

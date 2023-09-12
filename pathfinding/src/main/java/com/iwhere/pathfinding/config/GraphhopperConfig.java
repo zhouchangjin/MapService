@@ -47,21 +47,7 @@ public class GraphhopperConfig {
 
 	@Bean
 	public GraphHopper getGraphHopperBean() {
-		/**
-		GraphHopper hopper=new GraphHopper();
-		//System.out.println(getCacheFolder());
-		if(isEnableElevator()){
-			MyElevationProvider provider=new MyElevationProvider(getDemFile());
-			provider.initialize();
-			hopper.setElevationProvider(provider);
-		}
 
-		hopper.setGraphHopperLocation(getCacheFolder());
-		hopper.setProfiles(new Profile("car").setVehicle("car").setWeighting("fastest").setTurnCosts(false));
-		hopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car"));
-		hopper.importOrLoad();
-        return hopper;
-		 **/
 		if(isEnableElevator()){
 			return GraphHopperInitUtil.GetInstance3d(getCacheFolder(),getDemFile(),"car");
 		}else{

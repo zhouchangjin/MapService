@@ -9,6 +9,7 @@ import {defaults as defaultControls} from 'ol/control.js';
 import {Vector as VectorSource} from 'ol/source.js';
 import Draw from 'ol/interaction/Draw.js';
 import LineString from 'ol/geom/LineString.js';
+import Point from 'ol/geom/Point.js';
 import Feature from 'ol/Feature.js';
 import {Circle, Fill, Stroke, Style} from 'ol/style.js';
 
@@ -28,6 +29,7 @@ const bounds = [115.74514099975738, 23.57042099992924,
 					
 const source = new VectorSource({wrapX: false});
 var pathsource = new VectorSource({});
+var pathnodesource =new VectorSource({});
 
  const linstroke = new Stroke({
    color: '#3399CC',
@@ -45,6 +47,17 @@ const path_layer = new VectorLayer({
   source: pathsource,
   style:lineStyle
 });
+
+const node_layer=new VectorLayer({
+  source:pathnodesource,
+  style:{
+    'fill-color': 'rgba(255, 255, 255, 0.2)',
+    'stroke-color': '#ffcc33',
+    'stroke-width': 2,
+    'circle-radius': 4,
+    'circle-fill-color': '#ffcc33',
+  },
+})
 
 const layers = [
     new TileLayer({
@@ -64,7 +77,9 @@ const layers = [
       }),
     }),
 	vector,
-	path_layer
+	path_layer,
+  node_layer,
+  
 ];
 const map = new Map({
   layers: layers,
@@ -120,18 +135,28 @@ postData("http://127.0.0.1:9090/route/search", gpspair
 	  coor.push(data.data[i].longitude);
 	  coor.push(data.data[i].latitude);
 	  array.push(coor);
+    let pathNode=new Point([data.data[i].longitude,data.data[i].latitude]);
+    let pfeature=new Feature({
+      geometry:pathNode,
+      name:'p'+i,
+      properties:{
+        ele:data.data[i].elevation
+      }
+    })
+    pathnodesource.addFeature(pfeature)
   }
   let path=new LineString(array);
   let feature = new Feature({
   geometry: path,
   name: 'result',
   });
-  console.log(feature);
+  //console.log(feature);
   //var features=[];
   //features.push(feature);
   pathsource.addFeature(feature);
   console.log(pathsource.getFeatures()[0].getGeometry());
-  console.log(source.getFeatures()[0].getGeometry())
+  //console.log(source.getFeatures()[0].getGeometry())
+  console.log(pathnodesource.getFeatures()[0].getGeometry())
   
 });
 	

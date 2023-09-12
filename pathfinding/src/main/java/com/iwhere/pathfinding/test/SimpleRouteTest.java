@@ -51,7 +51,6 @@ public class SimpleRouteTest {
 
         PointList pl=path.getWaypoints();
 
-
         for(Instruction instruction:il){
             System.out.println("下一个目的地： "+instruction.getName());
             System.out.println("左右转："+instruction.getTurnDescription(tr));
