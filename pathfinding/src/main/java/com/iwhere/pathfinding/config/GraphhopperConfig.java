@@ -2,6 +2,7 @@ package com.iwhere.pathfinding.config;
 
 import com.graphhopper.reader.dem.ElevationProvider;
 import com.iwhere.pathfinding.elevation.MyElevationProvider;
+import com.iwhere.pathfinding.util.GraphHopperInitUtil;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,6 +47,7 @@ public class GraphhopperConfig {
 
 	@Bean
 	public GraphHopper getGraphHopperBean() {
+		/**
 		GraphHopper hopper=new GraphHopper();
 		//System.out.println(getCacheFolder());
 		if(isEnableElevator()){
@@ -59,6 +61,12 @@ public class GraphhopperConfig {
 		hopper.getCHPreparationHandler().setCHProfiles(new CHProfile("car"));
 		hopper.importOrLoad();
         return hopper;
+		 **/
+		if(isEnableElevator()){
+			return GraphHopperInitUtil.GetInstance3d(getCacheFolder(),getDemFile(),"car");
+		}else{
+			return GraphHopperInitUtil.GetInstance(getCacheFolder(),"car");
+		}
 	}
 
 }
