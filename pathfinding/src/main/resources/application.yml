@@ -1,9 +1,10 @@
 server:
     port: 9090
 graphhopper:
-    cacheFolder: D:/cache
+    cacheFolder: D:/GraphhopperCache/cache
+    customCacheFolder:  D:/GraphhopperCache/cache_custom
     enableElevator: true
-    demFile: d:/cache/fujian.tif
+    demFile: D:/GraphhopperCache/fujian.tif
 spring:
     servlet:
       multipart:

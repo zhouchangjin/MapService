@@ -45,7 +45,8 @@ const vector = new VectorLayer({
 
 const path_layer = new VectorLayer({
   source: pathsource,
-  style:lineStyle
+  style:lineStyle,
+  lname: "path"
 });
 
 const node_layer=new VectorLayer({
@@ -135,28 +136,30 @@ postData("http://127.0.0.1:9090/route/search", gpspair
 	  coor.push(data.data[i].longitude);
 	  coor.push(data.data[i].latitude);
 	  array.push(coor);
+	/**
     let pathNode=new Point([data.data[i].longitude,data.data[i].latitude]);
     let pfeature=new Feature({
       geometry:pathNode,
       name:'p'+i,
-      properties:{
-        ele:data.data[i].elevation
-      }
+      elevation:data.data[i].elevation
     })
     pathnodesource.addFeature(pfeature)
+	**/
   }
-  let path=new LineString(array);
-  let feature = new Feature({
-  geometry: path,
-  name: 'result',
-  });
-  //console.log(feature);
-  //var features=[];
-  //features.push(feature);
-  pathsource.addFeature(feature);
-  console.log(pathsource.getFeatures()[0].getGeometry());
-  //console.log(source.getFeatures()[0].getGeometry())
-  console.log(pathnodesource.getFeatures()[0].getGeometry())
+  
+  for(var j=0;j<array.length-1;j++){
+	  let tmp=[];
+	  tmp.push(array[j]);
+	  tmp.push(array[j+1]);
+	  let path=new LineString(tmp);
+	  let feature=new Feature({
+		  geometry: path,
+		  name: 'path'+j,
+		  elevation:data.data[j].elevation
+	  });
+	  pathsource.addFeature(feature);
+  }
+
   
 });
 	
@@ -165,6 +168,25 @@ postData("http://127.0.0.1:9090/route/search", gpspair
 	
 	
 }
+
+map.on('pointermove',evt=>{
+	//console.log(evt);
+	map.forEachFeatureAtPixel(evt.pixel, function (f,layer) {
+    //selected = f;
+    //selectStyle.getFill().setColor(f.get('COLOR') || '#eeeeee');
+    //f.setStyle(selectStyle);
+    if(layer!=null){
+		//console.log(f.get('name'));
+		if(layer.get('lname')!=undefined){
+			document.getElementById('feature-info').innerHTML=f.get('name')+" 高度值:"+f.get('elevation');
+		}
+	}
+	return true;
+  });
+	
+});
+
+
 map.on('click',evt=>{
 	counter++;
 	var str=mousepo.innerText;

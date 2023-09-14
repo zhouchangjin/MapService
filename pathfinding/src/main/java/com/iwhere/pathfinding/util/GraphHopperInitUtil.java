@@ -18,6 +18,17 @@ public class GraphHopperInitUtil {
         new GraphHopperBuilder(cachefolder).initialize(osmFile).useElevation(demFile).withProfile(profileNames).build();
     }
 
+    public static void InitGraphHopper3dWithCustomModel(String osmFile,String demFile,
+                                                        String cacheFolder,String ...profileNames){
+        new GraphHopperBuilder(cacheFolder).initialize(osmFile).
+                useElevation(demFile).withProfile(profileNames).customModel().build();
+    }
+
+    public static GraphHopper GetCustomInstance3d(String cacheFolder,String demFile,String ...profileNames){
+        return new GraphHopperBuilder(cacheFolder).useElevation(demFile)
+                .withProfile(profileNames).customModel().build();
+    }
+
     public static GraphHopper GetInstance3d(String cacheFolder,String demFile,String ...profileNames){
 
         return  new GraphHopperBuilder(cacheFolder).useElevation(demFile).withProfile(profileNames).build();
@@ -28,7 +39,8 @@ public class GraphHopperInitUtil {
     }
 
     public static void main(String[] args) {
-
+        InitGraphHopper3dWithCustomModel("d:/地图数据/osm/福建路网v1.5.osm",
+                "d:/cache/fujian.tif","d:/cache_custom","car_custom");
         //InitGraphHopper("d:/地图数据/osm/福建路网v1.5.osm","d:/cache","car","bike","foot");
         //InitGraphHopper3d("d:/地图数据/OSM/福建路网v1.5.osm","d:/cache/fujian.tif","d:/cache","car","bike","foot");
     }

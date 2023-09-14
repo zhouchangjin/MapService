@@ -3,7 +3,9 @@ package com.iwhere.pathfinding.util;
 
 import com.graphhopper.GraphHopper;
 import com.graphhopper.config.CHProfile;
+import com.graphhopper.config.LMProfile;
 import com.graphhopper.config.Profile;
+import com.graphhopper.routing.weighting.custom.CustomProfile;
 import com.iwhere.pathfinding.elevation.MyElevationProvider;
 
 public class GraphHopperBuilder{
@@ -17,6 +19,8 @@ public class GraphHopperBuilder{
     boolean initialize=false;
 
     boolean enableElevation=false;
+
+    boolean customModel=false;
 
     public GraphHopperBuilder(String cacheFolder){
         this.cacheFolder=cacheFolder;
@@ -39,6 +43,11 @@ public class GraphHopperBuilder{
         return this;
     }
 
+    public GraphHopperBuilder customModel(){
+        this.customModel=true;
+        return this;
+    }
+
     public GraphHopper build(){
         GraphHopper hopper=new GraphHopper();
         hopper.setGraphHopperLocation(cacheFolder);
@@ -53,8 +62,15 @@ public class GraphHopperBuilder{
         ProfileFactory fac=new ProfileFactory();
         Profile[] profiles=fac.createProfilesWithName(profileNames);
         hopper.setProfiles(profiles);
-        CHProfile[] chProfiles=fac.createCHProfilesWithName(profileNames);
-        hopper.getCHPreparationHandler().setCHProfiles(chProfiles);
+        if(customModel){
+            //使用landmark算法
+            LMProfile[] lmProfiles=fac.createLMProfilesWithName(profileNames);
+            hopper.getLMPreparationHandler().setLMProfiles(lmProfiles);
+        }else{
+            //使用ch算法
+            CHProfile[] chProfiles=fac.createCHProfilesWithName(profileNames);
+            hopper.getCHPreparationHandler().setCHProfiles(chProfiles);
+        }
         if(initialize){
             hopper.importAndClose();
             return null;
