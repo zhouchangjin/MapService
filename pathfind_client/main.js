@@ -29,18 +29,33 @@ const bounds = [115.74514099975738, 23.57042099992924,
 					
 const source = new VectorSource({wrapX: false});
 var pathsource = new VectorSource({});
+var custompathsource = new VectorSource({});
 var pathnodesource =new VectorSource({});
 
  const linstroke = new Stroke({
    color: '#3399CC',
    width: 10,
  });
+  const linstroke2 = new Stroke({
+   color: '#7799CC',
+   width: 6,
+ });
  const lineStyle=new Style({
      stroke: linstroke
+   })
+   
+    const lineStyle2=new Style({
+     stroke: linstroke2
    })
 
 const vector = new VectorLayer({
   source: source,
+});
+
+const path_layer2 = new VectorLayer({
+  source: custompathsource,
+  style:lineStyle2,
+  lname: "path2"
 });
 
 const path_layer = new VectorLayer({
@@ -78,6 +93,7 @@ const layers = [
       }),
     }),
 	vector,
+	path_layer2,
 	path_layer,
   node_layer,
   
@@ -101,13 +117,20 @@ function addInteraction(typeStr){
     map.addInteraction(draw);
 
 }
-
+const clrbtn=document.getElementById("clrroute");
 const btn = document.getElementById('btnroute');
 const input_start_lo=document.getElementById("start_coor_lo");
 const input_start_la=document.getElementById("start_coor_la");
 const input_end_lo=document.getElementById("end_coor_lo");
 const input_end_la=document.getElementById("end_coor_la");
 const mousepo=document.getElementById("mouse-position");
+//let current_source=pathsource;
+
+clrbtn.onclick=(event)=>{
+	pathsource.clear();
+	custompathsource.clear();
+}
+
 btn.onclick=(event)=>{
 	//console.log(input_start_lo.value);
 	//console.log(input_start_la.value);
@@ -129,7 +152,18 @@ btn.onclick=(event)=>{
   let url=[];//{"http://127.0.0.1:9090/route/search","http://127.0.0.1:9090/route/searchRoute"};
   url.push("http://127.0.0.1:9090/route/search");
   url.push("http://127.0.0.1:9090/route/searchCustom");
-	
+  if(choice==0){
+	GetRoute(url[choice],gpspair,pathsource);
+  }else if(choice==1){
+	  GetRoute(url[choice],gpspair,custompathsource);
+  }else{
+
+	  GetRoute(url[0],gpspair,pathsource);
+
+	  GetRoute(url[1],gpspair,custompathsource);
+  }
+  
+/***	
 postData(url[choice], gpspair
 ).then((data) => {
 	
@@ -142,15 +176,7 @@ postData(url[choice], gpspair
 	  coor.push(data.data[i].longitude);
 	  coor.push(data.data[i].latitude);
 	  array.push(coor);
-	/**
-    let pathNode=new Point([data.data[i].longitude,data.data[i].latitude]);
-    let pfeature=new Feature({
-      geometry:pathNode,
-      name:'p'+i,
-      elevation:data.data[i].elevation
-    })
-    pathnodesource.addFeature(pfeature)
-	**/
+
   }
   
   for(var j=0;j<array.length-1;j++){
@@ -163,12 +189,12 @@ postData(url[choice], gpspair
 		  name: 'path'+j,
 		  elevation:data.data[j].elevation
 	  });
-	  pathsource.addFeature(feature);
+	  current_source.addFeature(feature);
   }
 
   
 });
-	
+**/	
 	
 	
 	
@@ -210,6 +236,51 @@ map.on('click',evt=>{
 		input_end_la.value=arr[1];
 	}
 });
+
+function GetRoute(url,data={},source){
+	
+		
+postData(url, data
+).then((data) => {
+	
+  console.log(data); // JSON data parsed by `data.json()` call
+  var array=[];
+  
+  for(var i=0;i<data.data.length;i++){
+      //console.log(data.data[i])
+	  var coor=[];
+	  coor.push(data.data[i].longitude);
+	  coor.push(data.data[i].latitude);
+	  array.push(coor);
+	/**
+    let pathNode=new Point([data.data[i].longitude,data.data[i].latitude]);
+    let pfeature=new Feature({
+      geometry:pathNode,
+      name:'p'+i,
+      elevation:data.data[i].elevation
+    })
+    pathnodesource.addFeature(pfeature)
+	**/
+  }
+  
+  for(var j=0;j<array.length-1;j++){
+	  let tmp=[];
+	  tmp.push(array[j]);
+	  tmp.push(array[j+1]);
+	  let path=new LineString(tmp);
+	  let feature=new Feature({
+		  geometry: path,
+		  name: 'path'+j,
+		  elevation:data.data[j].elevation
+	  });
+	  source.addFeature(feature);
+  }
+
+  
+});
+	
+	
+}
 
 
 //console.log(map)

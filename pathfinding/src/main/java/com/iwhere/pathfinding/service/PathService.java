@@ -39,7 +39,10 @@ public class PathService {
 				.setLocale(Locale.CHINA);
 		CustomModel customModel=new CustomModel();
 		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, 0.5));
-		customModel.addToPriority(If("true", LIMIT, 100));
+		//customModel.addToPriority(If("true", LIMIT, 100));
+
+		//customModel.addToPriority(If("average_slope > 10",MULTIPLY,0.1));
+
 		req.setCustomModel(customModel);
 		GHResponse rsp=customModelGraphhopper.route(req);
 		if (rsp.hasErrors()) {
