@@ -13,7 +13,7 @@ import Point from 'ol/geom/Point.js';
 import Feature from 'ol/Feature.js';
 import {Circle, Fill, Stroke, Style} from 'ol/style.js';
 
-
+let choice=0;
 let draw;
 let counter=0;
 const mousePositionControl = new MousePosition({
@@ -123,8 +123,14 @@ btn.onclick=(event)=>{
     "longitude": input_end_lo.value
 	}};
   console.log(gpspair);
+  console.log(document.getElementById('modesel').value);
+  choice=document.getElementById('modesel').value;
+  
+  let url=[];//{"http://127.0.0.1:9090/route/search","http://127.0.0.1:9090/route/searchRoute"};
+  url.push("http://127.0.0.1:9090/route/search");
+  url.push("http://127.0.0.1:9090/route/searchCustom");
 	
-postData("http://127.0.0.1:9090/route/search", gpspair
+postData(url[choice], gpspair
 ).then((data) => {
 	
   console.log(data); // JSON data parsed by `data.json()` call

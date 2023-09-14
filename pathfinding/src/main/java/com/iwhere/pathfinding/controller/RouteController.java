@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.iwhere.pathfinding.dto.Message;
 import com.iwhere.pathfinding.dto.GPSPair;
-import com.iwhere.pathfinding.dto.GPSPoint;
 import com.iwhere.pathfinding.service.PathService;
 
 @CrossOrigin
@@ -30,6 +29,16 @@ public class RouteController {
 		Message message = new Message();
 		message.setMessage("获取成功");
 		List<GPSPointWithElevation> plist=pathService.searchRoute(points.getStart(), points.getEnd());
+		message.setData(plist);
+		return message;
+	}
+
+	@RequestMapping(value = "/searchCustom", method = RequestMethod.POST)
+	@ResponseBody
+	public Message getRouteCustom(@RequestBody GPSPair points) {
+		Message message = new Message();
+		message.setMessage("获取成功");
+		List<GPSPointWithElevation> plist=pathService.searchRouteCustom(points.getStart(), points.getEnd());
 		message.setData(plist);
 		return message;
 	}

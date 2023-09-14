@@ -19,7 +19,7 @@ public class SimpleRouteTest {
                                      double tolat,double toLong){
         GHRequest req=new GHRequest(fromLat,fromLon,tolat,toLong).setProfile("car_custom").setLocale(Locale.CHINA);
         CustomModel customModel=new CustomModel();
-        customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, 0.5));
+        customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, 0));
         // unconditional limit to 100km/h
         customModel.addToPriority(If("true", LIMIT, 100));
 
