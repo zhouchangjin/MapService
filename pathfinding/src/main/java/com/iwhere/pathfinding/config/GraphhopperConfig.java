@@ -71,7 +71,12 @@ public class GraphhopperConfig {
 	@Bean
 	@Qualifier("customGraphHopper")
 	public GraphHopper getGraphHopperCustomBean(){
-		return GraphHopperInitUtil.GetCustomInstance3d(getCustomCacheFolder(),getDemFile(),"car_custom");
+		if(isEnableElevator()){
+			return GraphHopperInitUtil.GetCustomInstance3d(getCustomCacheFolder(),getDemFile(),"car_custom");
+		}else{
+			return GraphHopperInitUtil.GetCusomInstance2d(getCustomCacheFolder(),"car_custom");
+		}
+
 	}
 
 

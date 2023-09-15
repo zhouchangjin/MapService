@@ -18,8 +18,6 @@ let draw;
 let counter=0;
 const mousePositionControl = new MousePosition({
   projection: 'EPSG:4326',
-  // comment the following two lines to have the mouse position
-  // be placed within the map.
   className: 'custom-mouse-position',
   target: document.getElementById('mouse-position'),
 });
@@ -50,6 +48,13 @@ var pathnodesource =new VectorSource({});
 
 const vector = new VectorLayer({
   source: source,
+  style:{
+    'fill-color': 'rgba(255, 255, 255, 0.2)',
+    'stroke-color': '#00cc11',
+    'stroke-width': 2,
+    'circle-radius': 10,
+    'circle-fill-color': '#00cc33',
+  }
 });
 
 const path_layer2 = new VectorLayer({
@@ -93,8 +98,8 @@ const layers = [
       }),
     }),
 	vector,
-	path_layer2,
 	path_layer,
+	path_layer2,
   node_layer,
   
 ];
@@ -115,6 +120,7 @@ function addInteraction(typeStr){
       type: typeStr,
     });
     map.addInteraction(draw);
+	
 
 }
 const clrbtn=document.getElementById("clrroute");
@@ -124,7 +130,7 @@ const input_start_la=document.getElementById("start_coor_la");
 const input_end_lo=document.getElementById("end_coor_lo");
 const input_end_la=document.getElementById("end_coor_la");
 const mousepo=document.getElementById("mouse-position");
-//let current_source=pathsource;
+const mainCoef=document.getElementById("mainCoef");
 
 clrbtn.onclick=(event)=>{
 	pathsource.clear();
@@ -132,10 +138,8 @@ clrbtn.onclick=(event)=>{
 }
 
 btn.onclick=(event)=>{
-	//console.log(input_start_lo.value);
-	//console.log(input_start_la.value);
-	//console.log(input_end_lo.value);
-	//console.log(input_end_la.value);
+
+	let _maincoef=mainCoef.value/10;
 	var gpspair={
   "end": {
     "latitude": input_start_la.value,
@@ -144,12 +148,19 @@ btn.onclick=(event)=>{
   "start": {
     "latitude": input_end_la.value,
     "longitude": input_end_lo.value
-	}};
+	},
+	"priority": {
+    "minLane": 0,
+    "primaryRoadWeight": _maincoef,
+    "secondaryRoadWeight": 0,
+    "tool": true
+    }
+	
+	};
   console.log(gpspair);
-  console.log(document.getElementById('modesel').value);
   choice=document.getElementById('modesel').value;
   
-  let url=[];//{"http://127.0.0.1:9090/route/search","http://127.0.0.1:9090/route/searchRoute"};
+  let url=[];
   url.push("http://127.0.0.1:9090/route/search");
   url.push("http://127.0.0.1:9090/route/searchCustom");
   if(choice==0){
@@ -163,40 +174,6 @@ btn.onclick=(event)=>{
 	  GetRoute(url[1],gpspair,custompathsource);
   }
   
-/***	
-postData(url[choice], gpspair
-).then((data) => {
-	
-  console.log(data); // JSON data parsed by `data.json()` call
-  var array=[];
-  
-  for(var i=0;i<data.data.length;i++){
-      //console.log(data.data[i])
-	  var coor=[];
-	  coor.push(data.data[i].longitude);
-	  coor.push(data.data[i].latitude);
-	  array.push(coor);
-
-  }
-  
-  for(var j=0;j<array.length-1;j++){
-	  let tmp=[];
-	  tmp.push(array[j]);
-	  tmp.push(array[j+1]);
-	  let path=new LineString(tmp);
-	  let feature=new Feature({
-		  geometry: path,
-		  name: 'path'+j,
-		  elevation:data.data[j].elevation
-	  });
-	  current_source.addFeature(feature);
-  }
-
-  
-});
-**/	
-	
-	
 	
 	
 }
@@ -222,11 +199,16 @@ map.on('pointermove',evt=>{
 map.on('click',evt=>{
 	counter++;
 	var str=mousepo.innerText;
-	console.log("clicked map");
-	console.log(mousepo.innerText);
+	//console.log("clicked map");
+	//console.log(mousepo.innerText);
+	let features=source.getFeatures();
+	console.log(features.length);
+	if(features.length>2){
+		console.log("==");
+		source.removeFeature(features.shift());
+	}
 	if(counter%2==1){
 		//console.log(str.split(","))
-		
 		var arr=str.split(",");
 		input_start_lo.value=arr[0];
 		input_start_la.value=arr[1];
@@ -274,6 +256,7 @@ postData(url, data
 		  elevation:data.data[j].elevation
 	  });
 	  source.addFeature(feature);
+	  
   }
 
   

@@ -3,6 +3,7 @@ package com.iwhere.pathfinding.controller;
 import java.util.List;
 
 import com.iwhere.pathfinding.dto.GPSPointWithElevation;
+import com.iwhere.pathfinding.dto.SearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,10 +36,13 @@ public class RouteController {
 
 	@RequestMapping(value = "/searchCustom", method = RequestMethod.POST)
 	@ResponseBody
-	public Message getRouteCustom(@RequestBody GPSPair points) {
+	public Message getRouteCustom(@RequestBody SearchRequest request) {
 		Message message = new Message();
 		message.setMessage("获取成功");
-		List<GPSPointWithElevation> plist=pathService.searchRouteCustom(points.getStart(), points.getEnd());
+		List<GPSPointWithElevation> plist=pathService.searchRouteCustom(
+				request.getStart(),
+				request.getEnd(),
+				request.getPriority());
 		message.setData(plist);
 		return message;
 	}

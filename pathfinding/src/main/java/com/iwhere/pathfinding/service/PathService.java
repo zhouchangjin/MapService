@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import com.graphhopper.util.CustomModel;
+import com.iwhere.pathfinding.dto.CustomPriority;
 import com.iwhere.pathfinding.dto.GPSPointWithElevation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -31,14 +32,18 @@ public class PathService {
 	@Qualifier("customGraphHopper")
 	GraphHopper customModelGraphhopper;
 
-	public List<GPSPointWithElevation> searchRouteCustom(GPSPoint start,GPSPoint end){
+	public List<GPSPointWithElevation> searchRouteCustom(GPSPoint start, GPSPoint end, CustomPriority priority){
 		List<GPSPointWithElevation> plist=new ArrayList<>();
 		GHRequest req=new GHRequest(start.getLatitude(),start.getLongitude(),
 				end.getLatitude(),end.getLongitude())
 				.setProfile("car_custom")
 				.setLocale(Locale.CHINA);
 		CustomModel customModel=new CustomModel();
-		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, 0.5));
+		double priCoef=priority.getPrimaryRoadWeight();
+		int minLane= priority.getMinLane();
+		System.out.println(priCoef);
+		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, priCoef));
+		//customModel.addToPriority(If("lanes < "+minLane,MULTIPLY,0.5));
 		//customModel.addToPriority(If("true", LIMIT, 100));
 
 		//customModel.addToPriority(If("average_slope > 10",MULTIPLY,0.1));

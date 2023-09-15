@@ -18,6 +18,10 @@ public class GraphHopperInitUtil {
         new GraphHopperBuilder(cachefolder).initialize(osmFile).useElevation(demFile).withProfile(profileNames).build();
     }
 
+    public static void InitGraphHopper2dWithCustomModel(String osmFile,String cacheFolder,String ...profileNames){
+        new GraphHopperBuilder(cacheFolder).initialize(osmFile).withProfile(profileNames).customModel().build();
+    }
+
     public static void InitGraphHopper3dWithCustomModel(String osmFile,String demFile,
                                                         String cacheFolder,String ...profileNames){
         new GraphHopperBuilder(cacheFolder).initialize(osmFile).
@@ -27,6 +31,10 @@ public class GraphHopperInitUtil {
     public static GraphHopper GetCustomInstance3d(String cacheFolder,String demFile,String ...profileNames){
         return new GraphHopperBuilder(cacheFolder).useElevation(demFile)
                 .withProfile(profileNames).customModel().build();
+    }
+
+    public static GraphHopper GetCusomInstance2d(String cacheFolder,String ...profileNames){
+        return new GraphHopperBuilder(cacheFolder).withProfile(profileNames).customModel().build();
     }
 
     public static GraphHopper GetInstance3d(String cacheFolder,String demFile,String ...profileNames){
@@ -39,9 +47,14 @@ public class GraphHopperInitUtil {
     }
 
     public static void main(String[] args) {
-        InitGraphHopper3dWithCustomModel("d:/地图数据/osm/福建路网v1.5.osm",
-                "d:/cache/fujian.tif","d:/cache_custom","car_custom");
-        //InitGraphHopper("d:/地图数据/osm/福建路网v1.5.osm","d:/cache","car","bike","foot");
-        //InitGraphHopper3d("d:/地图数据/OSM/福建路网v1.5.osm","d:/cache/fujian.tif","d:/cache","car","bike","foot");
+        String osmFile="d:/地图数据/osm/福建路网v1.5.osm";
+        String cacheFolderCustom3d="d:/GraphhopperCache/cache_custom2d";
+        String cacheFolder2d="d:/GraphhopperCache/cache2d";
+        String profileNamesCustom[]={"car_custom"};
+        String profileNames[]={"car","bike","foot"};
+        String demFile="d:/GraphhopperCache/fujian.tif";
+        InitGraphHopper(osmFile,cacheFolder2d,profileNames);
+        //InitGraphHopper2dWithCustomModel(osmFile,cacheFolderCustom3d,profileNames);
+
     }
 }
