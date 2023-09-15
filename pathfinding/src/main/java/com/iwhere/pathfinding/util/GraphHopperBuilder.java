@@ -5,6 +5,7 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.LMProfile;
 import com.graphhopper.config.Profile;
+import com.graphhopper.routing.util.EncodingManager;
 import com.graphhopper.routing.weighting.custom.CustomProfile;
 import com.iwhere.pathfinding.elevation.MyElevationProvider;
 
@@ -59,6 +60,10 @@ public class GraphHopperBuilder{
             provider.initialize();
             hopper.setElevationProvider(provider);
         }
+        /**
+        EncodingManager.Builder builder=hopper.getEncodingManagerBuilder();
+        builder.addIfAbsent(hopper.getTagParserFactory(),"toll");
+        **/
         ProfileFactory fac=new ProfileFactory();
         Profile[] profiles=fac.createProfilesWithName(profileNames);
         hopper.setProfiles(profiles);

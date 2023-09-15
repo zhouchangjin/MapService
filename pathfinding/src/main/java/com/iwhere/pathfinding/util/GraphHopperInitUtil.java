@@ -48,13 +48,13 @@ public class GraphHopperInitUtil {
 
     public static void main(String[] args) {
         String osmFile="d:/地图数据/osm/福建路网v1.5.osm";
-        String cacheFolderCustom3d="d:/GraphhopperCache/cache_custom2d";
+        String cacheFolderCustom2d="d:/GraphhopperCache/cache_custom2d";
         String cacheFolder2d="d:/GraphhopperCache/cache2d";
         String profileNamesCustom[]={"car_custom"};
         String profileNames[]={"car","bike","foot"};
         String demFile="d:/GraphhopperCache/fujian.tif";
-        InitGraphHopper(osmFile,cacheFolder2d,profileNames);
-        //InitGraphHopper2dWithCustomModel(osmFile,cacheFolderCustom3d,profileNames);
+        //InitGraphHopper(osmFile,cacheFolder2d,profileNames);
+        InitGraphHopper2dWithCustomModel(osmFile,cacheFolderCustom2d,profileNamesCustom);
 
     }
 }
