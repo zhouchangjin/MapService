@@ -8,11 +8,19 @@ public class CustomPriority{
     //次干道权重
     float secondaryRoadWeight;
 
-    //车道限制
-    int minLane=1;
 
-    //走不走收费路段
-    boolean tool=true;
+    float speed=110;
+
+
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
 
     public float getPrimaryRoadWeight() {
         return primaryRoadWeight;
@@ -30,19 +38,4 @@ public class CustomPriority{
         this.secondaryRoadWeight = secondaryRoadWeight;
     }
 
-    public int getMinLane() {
-        return minLane;
-    }
-
-    public void setMinLane(int minLane) {
-        this.minLane = minLane;
-    }
-
-    public boolean isTool() {
-        return tool;
-    }
-
-    public void setTool(boolean tool) {
-        this.tool = tool;
-    }
 }

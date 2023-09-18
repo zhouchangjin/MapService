@@ -40,13 +40,13 @@ public class PathService {
 				.setLocale(Locale.CHINA);
 		CustomModel customModel=new CustomModel();
 		double priCoef=priority.getPrimaryRoadWeight();
-		int minLane= priority.getMinLane();
-		System.out.println(priCoef);
+		//int minLane= priority.getMinLane();
+		float maxSpeed= priority.getSpeed();
+		System.out.println(maxSpeed);
 		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, priCoef));
-		//customModel.addToPriority(If("lanes < "+minLane,MULTIPLY,0.5));
-		//customModel.addToPriority(If("true", LIMIT, 100));
-
-		//customModel.addToPriority(If("average_slope > 10",MULTIPLY,0.1));
+		customModel.addToPriority(If("max_speed < "+maxSpeed,MULTIPLY,0.15));
+		//
+		// customModel.addToPriority(If("toll == true",MULTIPLY,0.01));
 
 		req.setCustomModel(customModel);
 		GHResponse rsp=customModelGraphhopper.route(req);
