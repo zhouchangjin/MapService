@@ -47,15 +47,21 @@ public class ProfileFactory {
         }else if(name.equals("bike")){
             return new Profile("bike").setVehicle("bike").setWeighting("fastest").setTurnCosts(false);
         }else if(name.equals("foot")){
-            return new Profile("foot").setWeighting("fastest");
+            return new Profile("foot").setWeighting("fastest").setTurnCosts(false);
         }else if(name.contains("custom")){
             CustomModel customModel=new CustomModel();
             if(name.contains("car")){
-                return new CustomProfile(name).setCustomModel(customModel).setVehicle("car");
+                return new CustomProfile(name)
+                        .setCustomModel(customModel)
+                        .setVehicle("car");
             }else if(name.contains("bike")){
-                return new CustomProfile(name).setCustomModel(customModel).setVehicle("bike");
+                return new CustomProfile(name)
+                        .setCustomModel(customModel)
+                        .setVehicle("bike");
             }else if(name.contains("foot")){
-                return new CustomProfile(name).setCustomModel(customModel).setVehicle("foot");
+                return new CustomProfile(name)
+                        .setCustomModel(customModel)
+                        .setVehicle("foot");
             }else{
                 return null;
             }

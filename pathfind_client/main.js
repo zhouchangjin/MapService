@@ -188,7 +188,14 @@ map.on('pointermove',evt=>{
     if(layer!=null){
 		//console.log(f.get('name'));
 		if(layer.get('lname')!=undefined){
-			document.getElementById('feature-info').innerHTML=f.get('name')+" 高度值:"+f.get('elevation');
+			document.getElementById('feature-info').innerHTML=f.get('name')+
+			" 高度值:"+f.get('elevation')+
+			" 道路类型:"+f.get('road_class')+
+			" 限速："+f.get('max_speed')+
+			" 道路宽度: "+f.get('max_width')+
+			" 车道数量："+f.get('lanes')+
+			" 平均坡度："+f.get('average_slope')+
+			" 最大坡度: "+f.get('max_slope');
 		}
 	}
 	return true;
@@ -254,7 +261,13 @@ postData(url, data
 	  let feature=new Feature({
 		  geometry: path,
 		  name: 'path'+j,
-		  elevation:data.data[j].elevation
+		  elevation:data.data[j].elevation,
+		  road_class:data.data[j].edgeAtrribute.road_class,
+		  max_speed:data.data[j].edgeAtrribute.max_speed,
+		  max_width:data.data[j].edgeAtrribute.max_width,
+		  lanes:data.data[j].edgeAtrribute.lanes,
+		  max_slope:data.data[j].edgeAtrribute.max_slope,
+		  average_slope:data.data[j].edgeAtrribute.average_slope
 	  });
 	  source.addFeature(feature);
 	  

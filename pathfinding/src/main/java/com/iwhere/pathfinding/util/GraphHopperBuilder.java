@@ -5,9 +5,11 @@ import com.graphhopper.GraphHopper;
 import com.graphhopper.config.CHProfile;
 import com.graphhopper.config.LMProfile;
 import com.graphhopper.config.Profile;
-import com.graphhopper.routing.util.EncodingManager;
-import com.graphhopper.routing.weighting.custom.CustomProfile;
 import com.iwhere.pathfinding.elevation.MyElevationProvider;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class GraphHopperBuilder{
     String osmFile;
@@ -22,6 +24,8 @@ public class GraphHopperBuilder{
     boolean enableElevation=false;
 
     boolean customModel=false;
+
+    String encodeString="";
 
     public GraphHopperBuilder(String cacheFolder){
         this.cacheFolder=cacheFolder;
@@ -44,6 +48,25 @@ public class GraphHopperBuilder{
         return this;
     }
 
+    public GraphHopperBuilder encodeValues(List<EncodeValueEnum> values){
+        encodeValues(values.toArray(new EncodeValueEnum[0]));
+        return this;
+    }
+
+    public GraphHopperBuilder encodeValues(EncodeValueEnum ...values){
+        List<String> strList=new ArrayList<>();
+        for(EncodeValueEnum encodeValueEnum:values){
+            strList.add(encodeValueEnum.getValue());
+        }
+        encodeValues(strList.toArray(new String[0]));
+        return this;
+    }
+
+    public GraphHopperBuilder encodeValues(String ... values){
+        this.encodeString=String.join(",",values);
+        return this;
+    }
+
     public GraphHopperBuilder customModel(){
         this.customModel=true;
         return this;
@@ -52,6 +75,7 @@ public class GraphHopperBuilder{
     public GraphHopper build(){
         GraphHopper hopper=new GraphHopper();
         hopper.setGraphHopperLocation(cacheFolder);
+        hopper.setEncodedValuesString(encodeString);
         if(initialize){
             hopper.setOSMFile(osmFile);
         }
@@ -60,10 +84,6 @@ public class GraphHopperBuilder{
             provider.initialize();
             hopper.setElevationProvider(provider);
         }
-        /**
-        EncodingManager.Builder builder=hopper.getEncodingManagerBuilder();
-        builder.addIfAbsent(hopper.getTagParserFactory(),"toll");
-        **/
         ProfileFactory fac=new ProfileFactory();
         Profile[] profiles=fac.createProfilesWithName(profileNames);
         hopper.setProfiles(profiles);

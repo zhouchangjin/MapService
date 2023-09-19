@@ -1,5 +1,6 @@
 package com.iwhere.pathfinding.elevation;
 
+import com.graphhopper.reader.ReaderNode;
 import com.graphhopper.reader.dem.ElevationProvider;
 import com.graphhopper.storage.DAType;
 import org.geotools.coverage.grid.GridCoordinates2D;
@@ -61,33 +62,20 @@ public class MyElevationProvider implements ElevationProvider {
         }
     }
 
-    @Override
-    public ElevationProvider setBaseURL(String baseURL) {
-        return this;
-    }
 
     @Override
-    public ElevationProvider setDAType(DAType daType) {
-        return this;
+    public boolean canInterpolate() {
+        return true;
     }
 
-    @Override
-    public void setInterpolate(boolean interpolate) {
 
-    }
 
-    @Override
-    public boolean getInterpolate() {
-        return false;
-    }
+
 
     @Override
     public void release() {
 
     }
 
-    @Override
-    public void setAutoRemoveTemporaryFiles(boolean autoRemoveTemporary) {
 
-    }
 }
