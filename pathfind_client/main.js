@@ -35,7 +35,7 @@ var pathnodesource =new VectorSource({});
    width: 10,
  });
   const linstroke2 = new Stroke({
-   color: '#7799CC',
+   color: '#779900',
    width: 6,
  });
  const lineStyle=new Style({

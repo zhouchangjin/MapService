@@ -62,7 +62,7 @@ public class PathService {
 		float maxSpeed= priority.getSpeed();
 
 		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, ""+priCoef));
-		customModel.addToPriority(If("max_speed < "+maxSpeed,MULTIPLY,""+0.15));
+		//customModel.addToPriority(If("max_speed < "+maxSpeed,MULTIPLY,""+0.15));
 		//customModel.addToPriority(If("average_slope > 10",MULTIPLY,"0.2"));
 
 		req.setCustomModel(customModel);
