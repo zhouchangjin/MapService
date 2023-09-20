@@ -48,8 +48,38 @@ public class PathService {
 		request.setPathDetails(pathDetails);
 	}
 
-	public List<GPSPointWithAttributes> searchRouteCustom(GPSPoint start, GPSPoint end, CustomPriority priority){
+	private List<GPSPointWithAttributes> postRequestProcess(GHResponse rsp){
 		List<GPSPointWithAttributes> plist=new ArrayList<>();
+		ResponsePath path = rsp.getBest();
+		// 导航结果点位集合
+		PointList pointList = path.getPoints();
+
+		for (int i = 0; i < pointList.size(); ++i) {
+			GPSPointWithAttributes p=new GPSPointWithAttributes();
+			double longi=pointList.getLon(i);
+			double lati=pointList.getLat(i);
+			double elevation=pointList.getEle(i);
+			p.setLatitude(lati);
+			p.setLongitude(longi);
+			p.setElevation(elevation);
+			plist.add(p);
+		}
+		Map<String,List<PathDetail>> pathDetail=path.getPathDetails();
+		for(String key:pathDetail.keySet()){
+			List<PathDetail> pathDetailList=pathDetail.get(key);
+			for(PathDetail pd:pathDetailList){
+				int first=pd.getFirst();
+				int last=pd.getLast();
+				for(int i=first;i<last;i++){
+					plist.get(i).addAttribute(key,pd.getValue().toString());
+				}
+			}
+		}
+		return plist;
+	}
+
+	public List<GPSPointWithAttributes> searchRouteCustom(GPSPoint start, GPSPoint end, CustomPriority priority){
+
 		GHRequest req=new GHRequest(start.getLatitude(),start.getLongitude(),
 				end.getLatitude(),end.getLongitude())
 				.setProfile("car_custom")
@@ -65,8 +95,6 @@ public class PathService {
 		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, ""+priCoef));
 
 		if(useSlope){
-			//System.out.println("======================");
-			//customModel.addToPriority(If("average_slope > " +average_slope, MULTIPLY, ""+0.3));
 			customModel.addToPriority(If("average_slope>20 || average_slope<-20 ",MULTIPLY,"0.1"));
 			customModel.addToPriority(ElseIf("average_slope>10 || average_slope<-10 ",MULTIPLY,"0.4"));
 			customModel.addToPriority(ElseIf("average_slope>5 || average_slope<-5 ",MULTIPLY,"0.7"));
@@ -80,38 +108,13 @@ public class PathService {
 		if (rsp.hasErrors()) {
 			System.out.println(rsp.getErrors().toString());
 		}else {
-			ResponsePath path = rsp.getBest();
-			// 导航结果点位集合
-			PointList pointList = path.getPoints();
-
-			for (int i = 0; i < pointList.size(); ++i) {
-				GPSPointWithAttributes p=new GPSPointWithAttributes();
-				double longi=pointList.getLon(i);
-				double lati=pointList.getLat(i);
-				double elevation=pointList.getEle(i);
-				p.setLatitude(lati);
-				p.setLongitude(longi);
-				p.setElevation(elevation);
-				plist.add(p);
-			}
-			Map<String,List<PathDetail>> pathDetail=path.getPathDetails();
-			for(String key:pathDetail.keySet()){
-				List<PathDetail> pathDetailList=pathDetail.get(key);
-				for(PathDetail pd:pathDetailList){
-					int first=pd.getFirst();
-					int last=pd.getLast();
-					for(int i=first;i<last;i++){
-						plist.get(i).addAttribute(key,pd.getValue().toString());
-					}
-				}
-			}
+			return postRequestProcess(rsp);
 		}
-		return plist;
+		return new ArrayList<>();
 	}
 	
 	public List<GPSPointWithAttributes> searchRoute(GPSPoint start, GPSPoint end) {
-		ArrayList<GPSPointWithAttributes> plist = new ArrayList<>();
-        //System.out.println(start.getLatitude()+"_"+start.getLongitude());
+
 		GHRequest req = new GHRequest(start.getLatitude(), start.getLongitude(), end.getLatitude(), end.getLongitude()).setProfile("car")
 				.setLocale(Locale.CHINA);
 
@@ -121,32 +124,45 @@ public class PathService {
 		if (rsp.hasErrors()) {
 			System.out.println(rsp.getErrors().toString());
 		}else {
-			ResponsePath path = rsp.getBest();
-	         // 导航结果点位集合
-	         PointList pointList = path.getPoints();
-	         for (int i = 0; i < pointList.size(); ++i) {
-				 GPSPointWithAttributes p=new GPSPointWithAttributes();
-	        	 double longi=pointList.getLon(i);
-	        	 double lati=pointList.getLat(i);
-				 double elevation=pointList.getEle(i);
-	        	 p.setLatitude(lati);
-	        	 p.setLongitude(longi);
-				 p.setElevation(elevation);
-	        	 plist.add(p);
-	         }
-			Map<String,List<PathDetail>> pathDetail=path.getPathDetails();
-			for(String key:pathDetail.keySet()){
-				List<PathDetail> pathDetailList=pathDetail.get(key);
-				for(PathDetail pd:pathDetailList){
-					int first=pd.getFirst();
-					int last=pd.getLast();
-					for(int i=first;i<last;i++){
-						plist.get(i).addAttribute(key,pd.getValue().toString());
-					}
-				}
-			}
+			return postRequestProcess(rsp);
 		}
-		return plist;
+		return new ArrayList<>();
+	}
+
+	public List<GPSPointWithAttributes> searchBike(GPSPoint start,GPSPoint end){
+		GHRequest req = new GHRequest(start.getLatitude(),
+				start.getLongitude(),
+				end.getLatitude(),
+				end.getLongitude())
+				.setProfile("bike")
+				.setLocale(Locale.CHINA);
+		prePareRequestDetail(req);
+
+		GHResponse rsp = graphhopper.route(req);
+		if (rsp.hasErrors()) {
+			System.out.println(rsp.getErrors().toString());
+		}else {
+			return postRequestProcess(rsp);
+		}
+		return new ArrayList<>();
+	}
+
+	public List<GPSPointWithAttributes> searchFoot(GPSPoint start,GPSPoint end){
+		GHRequest req = new GHRequest(start.getLatitude(),
+				start.getLongitude(),
+				end.getLatitude(),
+				end.getLongitude())
+				.setProfile("foot")
+				.setLocale(Locale.CHINA);
+		prePareRequestDetail(req);
+
+		GHResponse rsp = graphhopper.route(req);
+		if (rsp.hasErrors()) {
+			System.out.println(rsp.getErrors().toString());
+		}else {
+			return postRequestProcess(rsp);
+		}
+		return new ArrayList<>();
 	}
 
 }

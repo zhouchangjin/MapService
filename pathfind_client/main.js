@@ -29,6 +29,9 @@ const source = new VectorSource({wrapX: false});
 var pathsource = new VectorSource({});
 var custompathsource = new VectorSource({});
 var pathnodesource =new VectorSource({});
+var bikesource=new VectorSource({});
+var footsource=new VectorSource({});
+
 
  const linstroke = new Stroke({
    color: '#3399CC',
@@ -38,12 +41,31 @@ var pathnodesource =new VectorSource({});
    color: '#779900',
    width: 6,
  });
+ 
+ const linestroke3=new Stroke({
+	 color:'#887700',
+	 width:6
+ });
+ 
+ const linestrokeFoot=new Stroke({
+	 color:'#00aacc',
+	 width:5
+ });
+ 
  const lineStyle=new Style({
      stroke: linstroke
    })
    
     const lineStyle2=new Style({
      stroke: linstroke2
+   })
+   
+   const lineStyle3=new Style({
+	   stroke:linestroke3
+   })
+   
+   const lineStyleFoot=new Style({
+	   stroke:linestrokeFoot
    })
 
 const vector = new VectorLayer({
@@ -68,6 +90,18 @@ const path_layer = new VectorLayer({
   style:lineStyle,
   lname: "path"
 });
+
+const bike_layer = new VectorLayer({
+	source: bikesource,
+	style:lineStyle3,
+	lname:"path3"
+});
+
+const foot_layer = new VectorLayer({
+	source:footsource,
+	style:lineStyleFoot,
+	lname:"path4"
+})
 
 const node_layer=new VectorLayer({
   source:pathnodesource,
@@ -100,8 +134,9 @@ const layers = [
 	vector,
 	path_layer,
 	path_layer2,
-  node_layer,
-  
+    node_layer,
+	foot_layer,
+  bike_layer
 ];
 const map = new Map({
   layers: layers,
@@ -125,6 +160,8 @@ function addInteraction(typeStr){
 }
 const clrbtn=document.getElementById("clrroute");
 const btn = document.getElementById('btnroute');
+const bikeBtn=document.getElementById("btnbike");
+const footBtn=document.getElementById("btnfoot");
 const input_start_lo=document.getElementById("start_coor_lo");
 const input_start_la=document.getElementById("start_coor_la");
 const input_end_lo=document.getElementById("end_coor_lo");
@@ -133,9 +170,44 @@ const mousepo=document.getElementById("mouse-position");
 const mainCoef=document.getElementById("mainCoef");
 //const slopeCtrl=document.getElementById("slopeInput");
 const useEleCtrl=document.getElementById("useEleInput");
+
+footBtn.onclick=(event)=>{
+	var gpspair={
+  "end": {
+    "latitude": input_start_la.value,
+    "longitude": input_start_lo.value
+  },
+  "start": {
+    "latitude": input_end_la.value,
+    "longitude": input_end_lo.value
+	}
+	
+	};
+	var footurl="http://127.0.0.1:9090/route/searchFoot";
+	GetRoute(footurl,gpspair,bikesource);
+}
+
 clrbtn.onclick=(event)=>{
 	pathsource.clear();
 	custompathsource.clear();
+	bikesource.clear();
+	footsource.clear();
+}
+
+btnbike.onclick=(event)=>{
+	var gpspair={
+  "end": {
+    "latitude": input_start_la.value,
+    "longitude": input_start_lo.value
+  },
+  "start": {
+    "latitude": input_end_la.value,
+    "longitude": input_end_lo.value
+	}
+	
+	};
+	var bikeurl="http://127.0.0.1:9090/route/searchBike";
+	GetRoute(bikeurl,gpspair,bikesource);
 }
 
 btn.onclick=(event)=>{

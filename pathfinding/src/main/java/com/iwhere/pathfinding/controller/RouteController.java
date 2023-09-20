@@ -43,5 +43,29 @@ public class RouteController {
 		message.setData(plist);
 		return message;
 	}
+	@RequestMapping(value = "/searchBike", method = RequestMethod.POST)
+	@ResponseBody
+	public Message getRouteBike(@RequestBody SearchRequest request){
+		Message message = new Message();
+		message.setMessage("获取成功");
+		List<GPSPointWithAttributes> plist=pathService.searchBike(
+				request.getStart(),
+				request.getEnd());
+		message.setData(plist);
+		return message;
+
+	}
+
+	@RequestMapping(value = "/searchFoot", method = RequestMethod.POST)
+	@ResponseBody
+	public Message getRouteFoot(@RequestBody SearchRequest request){
+		Message message = new Message();
+		message.setMessage("获取成功");
+		List<GPSPointWithAttributes> plist=pathService.searchFoot(
+				request.getStart(),
+				request.getEnd());
+		message.setData(plist);
+		return message;
+	}
 
 }
