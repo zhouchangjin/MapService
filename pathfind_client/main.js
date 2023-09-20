@@ -131,8 +131,8 @@ const input_end_lo=document.getElementById("end_coor_lo");
 const input_end_la=document.getElementById("end_coor_la");
 const mousepo=document.getElementById("mouse-position");
 const mainCoef=document.getElementById("mainCoef");
-const speedCtrl=document.getElementById("speedRange");
-
+//const slopeCtrl=document.getElementById("slopeInput");
+const useEleCtrl=document.getElementById("useEleInput");
 clrbtn.onclick=(event)=>{
 	pathsource.clear();
 	custompathsource.clear();
@@ -141,7 +141,9 @@ clrbtn.onclick=(event)=>{
 btn.onclick=(event)=>{
 
 	let _maincoef=mainCoef.value/10;
-	let _speed=speedCtrl.value;
+	//let _slope=slopeInput.value;
+	let _useValue=useEleCtrl.checked;
+	//alert(_useValue);
 	var gpspair={
   "end": {
     "latitude": input_start_la.value,
@@ -152,9 +154,8 @@ btn.onclick=(event)=>{
     "longitude": input_end_lo.value
 	},
 	"priority": {
-    "speed": _speed,
     "primaryRoadWeight": _maincoef,
-
+	"useSlope":_useValue
     }
 	
 	};

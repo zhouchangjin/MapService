@@ -22,7 +22,7 @@ import com.graphhopper.ResponsePath;
 import com.graphhopper.util.PointList;
 import com.iwhere.pathfinding.dto.GPSPoint;
 
-import static com.graphhopper.json.Statement.If;
+import static com.graphhopper.json.Statement.*;
 import static com.graphhopper.json.Statement.Op.LIMIT;
 import static com.graphhopper.json.Statement.Op.MULTIPLY;
 
@@ -59,11 +59,21 @@ public class PathService {
 
 		CustomModel customModel=new CustomModel();
 		double priCoef=priority.getPrimaryRoadWeight();
-		float maxSpeed= priority.getSpeed();
+		double average_slope=priority.getAverage_slope();
+		boolean useSlope= priority.isUseSlope();
 
 		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, ""+priCoef));
-		//customModel.addToPriority(If("max_speed < "+maxSpeed,MULTIPLY,""+0.15));
-		//customModel.addToPriority(If("average_slope > 10",MULTIPLY,"0.2"));
+
+		if(useSlope){
+			//System.out.println("======================");
+			//customModel.addToPriority(If("average_slope > " +average_slope, MULTIPLY, ""+0.3));
+			customModel.addToPriority(If("average_slope>20 || average_slope<-20 ",MULTIPLY,"0.1"));
+			customModel.addToPriority(ElseIf("average_slope>10 || average_slope<-10 ",MULTIPLY,"0.4"));
+			customModel.addToPriority(ElseIf("average_slope>5 || average_slope<-5 ",MULTIPLY,"0.7"));
+			customModel.addToPriority(ElseIf("average_slope>3 || average_slope<-3 ",MULTIPLY,"0.8"));
+			customModel.addToPriority(ElseIf("average_slope>1 || average_slope<-1 ",MULTIPLY,"0.9"));
+			customModel.addToPriority(Else(MULTIPLY,"1.0"));
+		}
 
 		req.setCustomModel(customModel);
 		GHResponse rsp=customModelGraphhopper.route(req);

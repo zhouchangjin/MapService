@@ -5,22 +5,25 @@ public class CustomPriority{
     //主干道权重
     float primaryRoadWeight;
 
-    //次干道权重
-    float secondaryRoadWeight;
+    float average_slope;
 
+    boolean useSlope;
 
-    float speed=110;
-
-
-
-    public float getSpeed() {
-        return speed;
+    public boolean isUseSlope() {
+        return useSlope;
     }
 
-    public void setSpeed(float speed) {
-        this.speed = speed;
+    public void setUseSlope(boolean useSlope) {
+        this.useSlope = useSlope;
     }
 
+    public float getAverage_slope() {
+        return average_slope;
+    }
+
+    public void setAverage_slope(float average_slope) {
+        this.average_slope = average_slope;
+    }
 
     public float getPrimaryRoadWeight() {
         return primaryRoadWeight;
@@ -28,14 +31,6 @@ public class CustomPriority{
 
     public void setPrimaryRoadWeight(float primaryRoadWeight) {
         this.primaryRoadWeight = primaryRoadWeight;
-    }
-
-    public float getSecondaryRoadWeight() {
-        return secondaryRoadWeight;
-    }
-
-    public void setSecondaryRoadWeight(float secondaryRoadWeight) {
-        this.secondaryRoadWeight = secondaryRoadWeight;
     }
 
 }
