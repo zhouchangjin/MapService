@@ -83,7 +83,7 @@ public class GraphHopperInitUtil {
         encodeValueEnums.add(EncodeValueEnum.TOLL);
         encodeValueEnums.add(EncodeValueEnum.AVERAGE_SLOPE);
         encodeValueEnums.add(EncodeValueEnum.MAX_SLOPE);
-        //InitGraphHopper3d(osmFile,demFile,cacheFolder3d,encodeValueEnums,profileNames);
+        InitGraphHopper3d(osmFile,demFile,cacheFolder3d,encodeValueEnums,profileNames);
         //InitGraphHopper(osmFile,cacheFolder2d,encodeValueEnums,profileNames);
         //InitGraphHopper2dWithCustomModel(osmFile,cacheFolderCustom2d,encodeValueEnums,profileNamesCustom);
         //InitGraphHopper3dWithCustomModel(osmFile,demFile,cacheFolderCustom3d,encodeValueEnums,profileNamesCustom);

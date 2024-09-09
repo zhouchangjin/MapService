@@ -5,8 +5,6 @@ public class CustomPriority{
     //主干道权重
     float primaryRoadWeight;
 
-    float average_slope;
-
     boolean useSlope;
 
     public boolean isUseSlope() {
@@ -15,14 +13,6 @@ public class CustomPriority{
 
     public void setUseSlope(boolean useSlope) {
         this.useSlope = useSlope;
-    }
-
-    public float getAverage_slope() {
-        return average_slope;
-    }
-
-    public void setAverage_slope(float average_slope) {
-        this.average_slope = average_slope;
     }
 
     public float getPrimaryRoadWeight() {

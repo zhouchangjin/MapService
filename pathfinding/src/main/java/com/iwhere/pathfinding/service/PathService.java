@@ -89,7 +89,6 @@ public class PathService {
 
 		CustomModel customModel=new CustomModel();
 		double priCoef=priority.getPrimaryRoadWeight();
-		double average_slope=priority.getAverage_slope();
 		boolean useSlope= priority.isUseSlope();
 
 		customModel.addToPriority(If("road_class == PRIMARY", MULTIPLY, ""+priCoef));
